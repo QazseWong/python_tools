@@ -54,3 +54,13 @@ def remove_n_r(text):
     :return:
     """
     return str(text).strip()
+
+
+def json_dumps(json_data):
+    """
+    还原json文本
+    :param json_data:
+    :return:
+    """
+    import json
+    return json.dumps(json_data)

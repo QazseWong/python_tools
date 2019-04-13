@@ -12,10 +12,10 @@
 # logging.disable(logging.CRITICAL)   # 禁止输出日志
 import logging
 import os
-import sys
+import sys as _sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_DIR)
+_sys.path.append(BASE_DIR)
 
 def log(logger_name='log-log', log_file=os.path.join(BASE_DIR, 'log', 'log.log'), level=logging.DEBUG,
         console_level=logging.DEBUG):

@@ -8,7 +8,17 @@
 #       主页  : http://qiiing.com 
 #       功能  :
 # ---------------------------------------------------
-import sys
+import sys as _sys
 import io
+from qazse import file
+from qazse import log
+from qazse import requser
+from qazse import seo
+from qazse import text
+from qazse import time
+from qazse import file
+from qazse import sys
+from qazse import spiders
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gb18030')
+
+_sys.stdout = io.TextIOWrapper(_sys.stdout.buffer, encoding='gb18030')

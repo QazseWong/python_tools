@@ -24,7 +24,7 @@ def useragent(device=0):
     return headers
 
 
-def request_get(url, params=None, proxy=None, **kwargs):
+def request_get(url, params=None, proxy=None,encoding = None,**kwargs):
     """
     get参数
     :param url:
@@ -49,7 +49,8 @@ def request_get(url, params=None, proxy=None, **kwargs):
     s.mount('https://', HTTPAdapter(max_retries=3))
     try:
         response = requests.get(url, params, proxies=proxies, headers=useragent(), **kwargs)
-        response.encoding = 'utf-8'
+        if encoding:
+            response.encoding = encoding
         return response
     except requests.exceptions.RequestException as e:
         print(e)
