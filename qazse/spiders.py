@@ -71,7 +71,7 @@ def ask_get(url, question_title_css='', question_content_css='', answers_css='',
     question_title = qazse.text.remove_n_r(question_title)
     question_content = soup.select_one(question_content_css).text if (soup.select_one(question_content_css)) else ''
     question_content = qazse.text.remove_n_r(question_content)
-    qusetion_md5 = qazse.text.md5_str(question_title + question_content)
+    question_md5 = qazse.text.md5_str(question_title + question_content)
     answers = list()
     for css in answers_css:
         answers = answers + soup.select(css)
@@ -86,7 +86,7 @@ def ask_get(url, question_title_css='', question_content_css='', answers_css='',
     return {
         "question_title": question_title,
         "question_content": question_content,
-        "question_md5": qusetion_md5,
+        "question_md5": question_md5,
         "answers": answers_list,
         "answer_count": len(answers_list),
         "url": url,
