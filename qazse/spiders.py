@@ -11,11 +11,11 @@
 import qazse
 
 
-def ask_get(url, question_title_css='', question_content_css='', answers_css='', remove_keyword='', type='auto',
+def ask_get(resp_text,url, question_title_css='', question_content_css='', answers_css='', remove_keyword='', type='auto',
             coding=None):
     """
     问答提取工具
-    :param url:链接地址 必填
+    :param resp_text:返回的内容
     :param question_title_css: 例如.question-name
     :param question_content_css:
     :param answers_css: list css样式
@@ -64,9 +64,7 @@ def ask_get(url, question_title_css='', question_content_css='', answers_css='',
         question_content_css = zhihu_question_content
         answers_css = zhihu_answers
         remove_keyword = zhihu_remove
-
-    resp = qazse.requser.request_get(url, encoding=coding)
-    soup = BeautifulSoup(resp.text, features="lxml")
+    soup = BeautifulSoup(resp_text, features="lxml")
     question_title = soup.select_one(question_title_css).text
     question_title = qazse.text.remove_n_r(question_title)
     question_content = soup.select_one(question_content_css).text if (soup.select_one(question_content_css)) else ''
