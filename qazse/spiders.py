@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # ---------------------------------------------------
 #       项目名: qazse   
 #       文件名: spiders 
@@ -8,8 +8,11 @@
 #       主页  : http://qiiing.com 
 #       功能  :
 # ---------------------------------------------------
+import qazse
 
-def ask_get(url,question_title_css='',question_content_css='',answers_css='',remove_keyword='',type='auto',coding=None):
+
+def ask_get(url, question_title_css='', question_content_css='', answers_css='', remove_keyword='', type='auto',
+            coding=None):
     """
     问答提取工具
     :param url:链接地址 必填
@@ -21,7 +24,6 @@ def ask_get(url,question_title_css='',question_content_css='',answers_css='',rem
     :param coding:编码类型
     :return: list
     """
-    import qazse
     from bs4 import BeautifulSoup
 
     wukong_question_title = '.question-name'
@@ -44,7 +46,7 @@ def ask_get(url,question_title_css='',question_content_css='',answers_css='',rem
             type = 'baidu'
         elif 'wukong' in url:
             type = 'wukong'
-        elif 'zhihu' in url:
+        elif 'zhidao.baidu.com' in url:
             type = 'zhihu'
 
     if type == 'baidu':
@@ -63,8 +65,7 @@ def ask_get(url,question_title_css='',question_content_css='',answers_css='',rem
         answers_css = zhihu_answers
         remove_keyword = zhihu_remove
 
-
-    resp = qazse.requser.request_get(url,encoding=coding)
+    resp = qazse.requser.request_get(url, encoding=coding)
     soup = BeautifulSoup(resp.text, features="lxml")
     question_title = soup.select_one(question_title_css).text
     question_title = qazse.text.remove_n_r(question_title)
@@ -88,6 +89,8 @@ def ask_get(url,question_title_css='',question_content_css='',answers_css='',rem
         "question_md5": qusetion_md5,
         "answers": answers_list,
         "answer_count": len(answers_list),
-        "url":url,
-        "type":type,
+        "url": url,
+        "type": type,
     }
+
+

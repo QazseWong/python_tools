@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # ---------------------------------------------------
 #       项目名: qazse   
 #       文件名: setup.py 
@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'qazse',
-    version = 0.1,
+    version = 0.2,
     packages = find_packages(),
     author = 'QazseWong',
     author_email = 'w@qiiing.com',
