@@ -34,12 +34,12 @@ def ask_get(url, question_title_css='', question_content_css='', answers_css='',
     baidu_question_title = '.ask-title'
     baidu_question_content = '.line.mt-5.q-content'
     baidu_answers = ['.line.content']
-    baidu_remove = []
+    baidu_remove = ['分享', '举报', '展开全部', '\d+评论', '评论']
 
     zhihu_question_title = '.QuestionHeader-title'
     zhihu_question_content = '.RichText.ztext'
     zhihu_answers = ['.RichContent-inner']
-    zhihu_remove = []
+    zhihu_remove = ['分享', '举报', '展开全部', '\d+评论', '评论','谢邀','邀请']
 
     if type == 'auto':
         if 'baidu' in url:
