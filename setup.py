@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'qazse',
-    version = 0.3,
+    version = 0.5,
     packages = find_packages(),
     author = 'QazseWong',
     author_email = 'w@qiiing.com',

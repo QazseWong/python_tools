@@ -55,7 +55,7 @@ def remove_n_r(text):
     """
     return str(text).strip()
 
-def remove_html_tag(html,tags):
+def remove_html_tag(html,tags = None):
     """
     删除HTML中的标签
     :param html:
@@ -63,7 +63,10 @@ def remove_html_tag(html,tags):
     :return:
     """
     from w3lib.html import remove_tags
-    return remove_tags(html,tags)
+    if tags:
+        return remove_tags(html,tags)
+    else:
+        return remove_tags(html,keep=())
 
 def json_dumps(json_data):
     """
