@@ -55,6 +55,15 @@ def remove_n_r(text):
     """
     return str(text).strip()
 
+def remove_html_tag(html,tags):
+    """
+    删除HTML中的标签
+    :param html:
+    :param tags:
+    :return:
+    """
+    from w3lib.html import remove_tags
+    return remove_tags(html,tags)
 
 def json_dumps(json_data):
     """
