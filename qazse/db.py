@@ -35,8 +35,21 @@ class redis_db():
         """
         return self.r.sadd(name,val)
 
-if __name__ == '__main__':
-    r = redis_db(host='192.168.1.10',port=6633,db=3,password='wang1997')
-    import qazse
-    datas = qazse.file.read_file_list('urls.txt')
-    r.list_to_set(datas,'cyb')
+
+def export_db_to_model(host_prot, username, password, db, tables=None, outfile='models.py'):
+    """
+    导出数据库模型到文件
+    :param host:
+    :param username:
+    :param password:
+    :param tables:
+    :param outfile:
+    :return:
+    """
+    if tables:
+        cmd = 'sqlacodegen --outfile=%s mysql://%s:%s@%s/%s --tables %s' %(outfile,username,password,host_prot,db,','.join(tables))
+    else:
+        cmd = 'sqlacodegen --outfile=%s mysql://%s:%s@%s/%s' % (outfile, username, password, host_prot, db)
+    import os
+    os.popen(cmd)
+
