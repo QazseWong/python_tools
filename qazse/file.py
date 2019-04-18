@@ -32,6 +32,8 @@ def write_sql(sql, file_path='sql.sql', encoding='utf8',mode='a+'):
     """
     with open(file_path, mode, encoding=encoding) as f:
         sql =str(sql)
+        if not ';' in sql:
+            sql = sql + ';'
         if not '\n' in sql:
             sql = sql + '\n'
         f.write(sql)
@@ -44,7 +46,7 @@ def write_text(text, file_path='text.txt', encoding='utf8',mode='a+'):
     :return:
     """
     with open(file_path, mode, encoding=encoding) as f:
-        text = str(text);
+        text = str(text)
         if not '\n' in text:
             sql = text + '\n'
         f.write(text)
