@@ -19,6 +19,7 @@ from qazse import time
 from qazse import file
 from qazse import sys
 from qazse import spiders
+from qazse import db
 
 
 _sys.stdout = io.TextIOWrapper(_sys.stdout.buffer, encoding='gb18030')
