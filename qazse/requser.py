@@ -8,6 +8,7 @@
 #       主页  : http://qiiing.com 
 #       功能  :
 # ---------------------------------------------------
+
 import requests
 
 
@@ -55,3 +56,49 @@ def request_get(url, params=None, proxy=None,encoding = None,**kwargs):
     except requests.exceptions.RequestException as e:
         print(e)
         return None
+
+def max_request_get(urls,max_pool = 100,directory = 'data' ,show_log = True,headers = None):
+    """
+    多线程读HTTP
+    :param urls: dict {url:'http://xxx','name':'xxx'}
+    :param max_pool: 最大线程
+    :param directory: 存储目录
+    :param show_log: 显示日志
+    :param headers:  请求头
+    :return:
+    """
+
+    import aiohttp, asyncio
+    from qazse import file
+
+    file.mkdir(directory)
+
+    async def main(pool):  # aiohttp必须放在异步函数中使用
+        tasks = []
+        sem = asyncio.Semaphore(pool)  # 限制同时请求的数量
+        for url in urls:
+            tasks.append(control_sem(sem,url['url'],url['name']))
+        await asyncio.wait(tasks)
+
+    async def control_sem(sem, url , name):  # 限制信号量
+        async with sem:
+            await fetch(url,name)
+
+    async def fetch(url,name):
+        async with aiohttp.request('GET', url ,headers=headers) as resp:
+            if show_log:
+                print('Download',url,resp.status)
+            file.write_file(await resp.read(),file_path = directory + '/' + name)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main(pool=max_pool))
+
+
+if __name__ == '__main__':
+    import time
+    start =time.time()
+    urls = []
+    for x in range(100):
+        urls.append({'url':'http://www.baidu.com','name':'%s.html' % x})
+    max_request_get(urls)
+    print(start - time.time())
