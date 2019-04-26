@@ -46,3 +46,15 @@ def timestamp_to_date(time_stamp, format_string="%Y-%m-%d %H:%M:%S"):
     time_array = time.localtime(time_stamp)
     str_date = time.strftime(format_string, time_array)
     return str_date
+
+
+def now(get13 = False):
+    """
+    返回现在整数时间戳
+    :param get13:
+    :return:
+    """
+    if get13:
+        return int(round(time.time() * 1000))
+    else:
+        return int(time.time())
