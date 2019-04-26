@@ -47,6 +47,29 @@ def write_text(text, file_path='text.txt', encoding='utf8',mode='a+'):
     """
     with open(file_path, mode, encoding=encoding) as f:
         text = str(text)
-        if not '\n' in text:
-            sql = text + '\n'
+        if not '\n' in text and not 'b' in mode:
+            text = text + '\n'
         f.write(text)
+
+
+def write_file(data, file_path='text.txt',mode='wb+'):
+    """
+    写文件
+    :param data:二进制数据
+    :param file_path: 写到目录
+    :return:
+    """
+    with open(file_path, mode) as f:
+        f.write(data)
+
+def mkdir(path):
+    """
+    创建目录
+    :param path:
+    :return:
+    """
+    import os
+    try:
+        os.makedirs(path)
+    except:
+        pass
