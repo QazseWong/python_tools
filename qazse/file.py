@@ -73,3 +73,14 @@ def mkdir(path):
         os.makedirs(path)
     except:
         pass
+
+
+def get_md5(bit):
+    """
+    获取md5
+    :param bit:
+    :return:
+    """
+    from hashlib import md5
+
+    return md5(bit).hexdigest()
