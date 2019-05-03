@@ -53,7 +53,7 @@ def remove_url(text):
     :param text:
     :return:
     """
-    return re.sub('^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&%\$\-]+)*@)?((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.[a-zA-Z]{2,4})(\:[0-9]+)?(/[^/][a-zA-Z0-9\.\,\?\'\\/\+&%\$#\=~_\-@]*)*$',text,'')
+    return re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+','',text)
 
 
 def remove_n_r(text):
@@ -73,7 +73,7 @@ def remove_html_tag(html,tags = None):
     """
     from w3lib.html import remove_tags
     if tags:
-        return remove_tags(html,tags)
+        return remove_tags(html,which_ones=(tags))
     else:
         return remove_tags(html,keep=())
 
@@ -85,3 +85,8 @@ def json_dumps(json_data):
     """
     import json
     return json.dumps(json_data)
+
+
+if __name__ == '__main__':
+    text = '<p>非常好看，穿出设计师设计出来的那种范来了，就完美了。</p><p><img src="49839281888"/></p>'
+    print(remove_url(text))

@@ -92,13 +92,3 @@ def max_request_get(urls,max_pool = 100,directory = 'data' ,show_log = True,head
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(pool=max_pool))
-
-
-if __name__ == '__main__':
-    import time
-    start =time.time()
-    urls = []
-    for x in range(100):
-        urls.append({'url':'http://www.baidu.com','name':'%s.html' % x})
-    max_request_get(urls)
-    print(start - time.time())
