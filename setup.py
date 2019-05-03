@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='qazse',
-    version="0.6.0",
+    version="0.6.1",
     keywords=("pip", "qazse", "QazseWong"),
     packages=find_packages(),
     author='QazseWong',
@@ -24,5 +24,5 @@ setup(
     long_description="自己python项目常用得工具包",
     include_package_data=True,
     platforms="any",
-    install_requires=["redis","requests","aiohttp","asyncio","bs4","difflib"]
+    install_requires=["redis","requests","aiohttp","asyncio","bs4"]
 )
