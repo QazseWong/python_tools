@@ -57,10 +57,10 @@ def request_get(url, params=None, proxy=None,encoding = None,**kwargs):
         print(e)
         return None
 
-def max_request_get(urls,max_pool = 100,directory = 'data' ,show_log = True,headers = None):
+def max_request_get(urls, max_pool=100, directory='data', show_log=True, headers=None):
     """
     多线程读HTTP
-    :param urls: dict {url:'http://xxx','name':'xxx'}
+    :param urls: dict {url:'http://xxx','name':'xxx',data:'data'}
     :param max_pool: 最大线程
     :param directory: 存储目录
     :param show_log: 显示日志
@@ -77,18 +77,24 @@ def max_request_get(urls,max_pool = 100,directory = 'data' ,show_log = True,head
         tasks = []
         sem = asyncio.Semaphore(pool)  # 限制同时请求的数量
         for url in urls:
-            tasks.append(control_sem(sem,url['url'],url['name']))
+            tasks.append(control_sem(sem, url['url'], url['name'], url['data']))
         await asyncio.wait(tasks)
 
-    async def control_sem(sem, url , name):  # 限制信号量
+    async def control_sem(sem, url, name, data=None):  # 限制信号量
         async with sem:
-            await fetch(url,name)
+            await fetch(url, name, data)
 
-    async def fetch(url,name):
-        async with aiohttp.request('GET', url ,headers=headers) as resp:
-            if show_log:
-                print('Download',url,resp.status)
-            file.write_file(await resp.read(),file_path = directory + '/' + name)
+    async def fetch(url, name, data=None):
+        if data:
+            async with aiohttp.request('POST', url, data=data, headers=headers) as resp:
+                if show_log:
+                    print('Download', url, resp.status)
+                file.write_file(await resp.read(), file_path=directory + '/' + name)
+        else:
+            async with aiohttp.request('GET', url, headers=headers) as resp:
+                if show_log:
+                    print('Download', url, resp.status)
+                file.write_file(await resp.read(), file_path=directory + '/' + name)
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(pool=max_pool))
