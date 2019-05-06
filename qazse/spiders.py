@@ -92,3 +92,107 @@ def ask_get(resp_text,url, question_title_css='', question_content_css='', answe
     }
 
 
+def article_get():
+    pass
+
+def browser(type = 1):
+    """
+    启动一个浏览器
+    :param type: 1 chrome  2 firefox
+    :return:
+    """
+    from selenium import webdriver
+    if type == 1:
+        b = webdriver.Chrome()
+    elif type ==2:
+        b = webdriver.Firefox()
+    else:
+        print('游览器类型不正确 1 chrome  2 firefox')
+        return ''
+    return b
+
+def check_ban(page_source):
+    """
+    检查当前是否被禁止
+    :param page_source:
+    :return:
+    """
+    if '验证' in page_source:
+        return True
+    elif '异常' in page_source:
+        return True
+    else:
+        return False
+
+def check_ban_browser(browser,type = 1):
+    """
+    检测浏览器是否被禁止，如果被禁止将重启浏览器
+    :param browser:
+    :param method: 重启完毕要执行的函数
+    :param type
+    :return:
+    """
+    from selenium import webdriver
+    if check_ban(browser.page_source):
+        url = browser.back()
+        url = browser.current_url
+        browser.quit()
+        if type == 1:
+            browser = webdriver.Chrome()
+        elif type ==2:
+            browser = webdriver.Firefox()
+        browser.get(url)
+        browser.implicitly_wait(30)
+        return browser,False
+    else:
+        return browser,True
+
+def sogou_spider(keywords):
+    """
+    搜狗微信爬虫
+    会激活一个google浏览器 环境尚未自动化配置 //todo
+    2019年5月6日 16:53:25
+    :param keywords:关键词们
+    :return:
+    """
+    from bs4 import BeautifulSoup
+    data = []
+    b = browser()
+    for keyword in keywords:
+        def input_keyword(keyword,b):
+            b.maximize_window()
+            b.get('https://weixin.sogou.com/')
+            b.implicitly_wait(30)
+            b.find_element_by_class_name('query').clear()
+            b.find_element_by_class_name('query').send_keys(keyword)
+            b.find_element_by_class_name('swz').click()
+
+        input_keyword(keyword,b)
+        b,status = check_ban_browser(b)
+        print(b.current_url)
+        while status and b.current_url == 'https://weixin.sogou.com/':
+            input_keyword(keyword,b)
+
+        while '下一页' in b.page_source:
+            b, status = check_ban_browser(b)
+            while status and b.current_url == 'https://weixin.sogou.com/':
+                input_keyword(keyword, b)
+
+            b.implicitly_wait(30)
+            soup = BeautifulSoup(b.page_source,'lxml')
+            urls = soup.select('.txt-box h3 a')
+            for url in urls:
+                data.append({
+                    'keyword':keyword,
+                    'title':url.text,
+                    'url':url['data-share']
+                })
+            b.find_element_by_link_text('下一页').click()
+    b.quit()
+    return data
+
+if __name__ == '__main__':
+    import json
+    keywords = ['亲爱的姑娘111']
+    datas = sogou_spider(keywords)
+    qazse.file.write_text(json.dumps(datas))
