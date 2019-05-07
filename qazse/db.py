@@ -54,7 +54,7 @@ def export_db_to_model(host_prot, username, password, db, tables=None, outfile='
     os.popen(cmd)
 
 
-def mongodb_db(host=None,password=None):
+def mongodb_db(host=None,port=27017,password=None):
     """
     返回一个mongodb存储对象
     :param mongo_db_link:链接地址
@@ -63,5 +63,5 @@ def mongodb_db(host=None,password=None):
     from pymongo import MongoClient
 
     if not host:
-        host = ['localhost:27017']
-    return MongoClient(host=host)
+        host = 'localhost'
+    return MongoClient(host=host,port=port,password=password)

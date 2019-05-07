@@ -121,12 +121,12 @@ def max_request_get(urls_info, max_pool=100, config=None):
                 if save_type == 1:
                     file.write_file(await resp.read(), file_path=directory + '/' + save_name)
                 elif save_type ==2:
-                    save_db.save(await resp.read())
+                    save_db.insert(await resp.read())
             elif not save_status_200:
                 if save_type == 1:
                     file.write_file(await resp.read(), file_path=directory + '/' + save_name)
                 elif save_type ==2:
-                    save_db.save(await resp.read())
+                    save_db.insert(await resp.read())
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(pool=max_pool))
