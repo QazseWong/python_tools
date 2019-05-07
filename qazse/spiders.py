@@ -92,7 +92,31 @@ def ask_get(resp_text,url, question_title_css='', question_content_css='', answe
     }
 
 
-def article_get():
+def article_get(resp_text,url,title_css,content_css,remove_keyword=''):
+    """
+    提取文章
+    :param resp_text:
+    :param url:
+    :param title_css:
+    :param content_css:
+    :param remove_keyword:
+    :return:
+    """
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(resp_text, features="lxml")
+    title = soup.select_one(title_css).text
+    title = qazse.text.remove_n_r(title)
+    title = qazse.text.remove_keyword(title, remove_keyword)
+    content = soup.select_one(content_css)
+    content = qazse.text.remove_n_r(content)
+    content = qazse.text.remove_keyword(content, remove_keyword)
+    md5 = qazse.text.md5_str(title + content)
+    return {
+        "title": title,
+        "content": content,
+        "md5": md5,
+        "url": url,
+    }
     pass
 
 def browser(type = 1):
@@ -190,9 +214,3 @@ def sogou_spider(keywords):
             b.find_element_by_link_text('下一页').click()
     b.quit()
     return data
-
-if __name__ == '__main__':
-    import json
-    keywords = ['亲爱的姑娘111']
-    datas = sogou_spider(keywords)
-    qazse.file.write_text(json.dumps(datas))

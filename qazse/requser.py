@@ -25,7 +25,7 @@ def useragent(device=0):
     return headers
 
 
-def request_get(url, params=None, proxy=None,encoding = None,**kwargs):
+def request_get(url, params=None, proxy=None, encoding=None, **kwargs):
     """
     get参数
     :param url:
@@ -57,14 +57,16 @@ def request_get(url, params=None, proxy=None,encoding = None,**kwargs):
         print(e)
         return None
 
-def max_request_get(urls, max_pool=100, directory='data', show_log=True, headers=None):
+
+def max_request_get(urls, max_pool=100, directory='data', show_log=True, headers=None, save_status_200 = True):
     """
     多线程读HTTP
-    :param urls: dict {url:'http://xxx','name':'xxx',data:'data'}
+    :param urls: dict {url:'http://xxx','name':'xxx',data:'data',method:"GET" }
     :param max_pool: 最大线程
     :param directory: 存储目录
     :param show_log: 显示日志
     :param headers:  请求头
+    :save_status_200: 只保存返回为200的内容
     :return:
     """
 
@@ -76,25 +78,22 @@ def max_request_get(urls, max_pool=100, directory='data', show_log=True, headers
     async def main(pool):  # aiohttp必须放在异步函数中使用
         tasks = []
         sem = asyncio.Semaphore(pool)  # 限制同时请求的数量
-        for url in urls:
-            tasks.append(control_sem(sem, url['url'], url['name'], url['data']))
+        for url_info in urls:
+            tasks.append(control_sem(sem, url_info))
         await asyncio.wait(tasks)
 
-    async def control_sem(sem, url, name, data=None):  # 限制信号量
+    async def control_sem(sem, url_info):  # 限制信号量
         async with sem:
-            await fetch(url, name, data)
+            await fetch(url_info)
 
-    async def fetch(url, name, data=None):
-        if data:
-            async with aiohttp.request('POST', url, data=data, headers=headers) as resp:
-                if show_log:
-                    print('Download', url, resp.status)
-                file.write_file(await resp.read(), file_path=directory + '/' + name)
-        else:
-            async with aiohttp.request('GET', url, headers=headers) as resp:
-                if show_log:
-                    print('Download', url, resp.status)
-                file.write_file(await resp.read(), file_path=directory + '/' + name)
-
+    async def fetch(url_info):
+        async with aiohttp.request(url_info.get('method'), url_info.get('url'), data=url_info.get('data'),headers=headers) as resp:
+            if show_log:
+                print('Download', url_info.get('url'), url_info.get('method'), resp.status)
+            if save_status_200:
+                if resp.status == 200:
+                    file.write_file(await resp.read(), file_path=directory + '/' + url_info.get('name'))
+            else:
+                file.write_file(await resp.read(), file_path=directory + '/' + url_info.get('name'))
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(pool=max_pool))
