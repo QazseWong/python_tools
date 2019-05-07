@@ -65,3 +65,6 @@ def mongodb_db(host=None,port=27017,password=None):
     if not host:
         host = 'localhost'
     return MongoClient(host=host,port=port,password=password)
+
+if __name__ == '__main__':
+    mongodb_db('192.168.1.10').test.test.insert({"name":"zhangsan","age":18})

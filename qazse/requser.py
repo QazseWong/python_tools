@@ -80,13 +80,34 @@ def max_request_get(urls_info, max_pool=100, config=None):
             save_status_200:true, 只保存http=200
             show_log:true       显示日志
         }
+
+    eg:
+
+    if __name__ == '__main__':
+
+    db = qazse.db.mongodb_db('192.168.1.10')
+    db = db.hf
+    set = db.article
+    urls = []
+    for id in range(1,7000): # id范围
+        url = {
+            "url": 'https://m.aihanfu.com/index.php?m=wap&c=api&a=get_one_info&catid=53&id=%s&zipImg=0' % resid,
+            "name": '%s.json' % id,
+            "save_type":2
+        }
+        urls.append(url)
+    config = {
+        "save_db":set
+    }
+    qazse.requser.max_request_get(urls,max_pool=100,config=config) # 线程数量
+
     :return:
     """
     directory = config.get('directory', 'data')
     save_status_200 = config.get('save_status_200', True)
     show_log = config.get('show_log', True)
-    save_db = config.get('save_db',qazse.db.mongodb_db())
-
+    save_db = config.get('save_db', qazse.db.mongodb_db())
+    import json
     import aiohttp, asyncio
     from qazse import file
 
@@ -113,20 +134,30 @@ def max_request_get(urls_info, max_pool=100, config=None):
         save_name = url_info.get('save_name', '%s.html' % url)
         save_type = url_info.get('save_type', 1)
 
+
         async with aiohttp.request(method, url_info.get('url'), data=data, headers=headers, proxy=proxy) as resp:
             if show_log:
-                print('Download', url, method, proxy, resp.status)
-
+                print('Download', url, method, proxy, resp.status,save_status_200,save_type)
             if save_status_200 and resp.status == 200:
                 if save_type == 1:
                     file.write_file(await resp.read(), file_path=directory + '/' + save_name)
-                elif save_type ==2:
-                    save_db.insert(await resp.read())
+                elif save_type == 2:
+                    data = await resp.read()
+                    try:
+                        save_db.insert(json.loads(data))
+                    except json.decoder.JSONDecodeError:
+                        pass
             elif not save_status_200:
                 if save_type == 1:
                     file.write_file(await resp.read(), file_path=directory + '/' + save_name)
-                elif save_type ==2:
-                    save_db.insert(await resp.read())
+                elif save_type == 2:
+                    data = await resp.read()
+                    try:
+                        save_db.insert(json.loads(data))
+                    except json.decoder.JSONDecodeError:
+                        pass
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(pool=max_pool))
+
+
