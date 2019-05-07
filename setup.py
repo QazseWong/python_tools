@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='qazse',
-    version="0.6.4",
+    version="0.6.5",
     keywords=("pip", "qazse", "QazseWong"),
     packages=find_packages(),
     author='QazseWong',
