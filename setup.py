@@ -24,5 +24,5 @@ setup(
     long_description="自己python项目常用得工具包",
     include_package_data=True,
     platforms="any",
-    install_requires=["redis","requests","aiohttp","asyncio","bs4"]
+    install_requires=["redis","requests","aiohttp","asyncio","bs4","selenium"]
 )
